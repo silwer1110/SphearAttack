@@ -5,11 +5,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 3f;
-    [SerializeField] private GameObject _prefab;
     [SerializeField] private Color _baseColor;
 
     private Renderer _renderer;
-    private Vector3 _target;
+    private Transform _target;
 
     private void Awake()
     {
@@ -17,9 +16,9 @@ public class Enemy : MonoBehaviour
         _renderer.material.color = _baseColor;
     }
 
-    public void SetTarget(Vector3 targetPosition)
+    public void SetTarget(Transform capsulPosition)
     {
-        _target = targetPosition;
+        _target = capsulPosition;
     }
 
     public void StartMoving()
@@ -29,9 +28,11 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator MoveToTarget()
     {
-        while ((transform.position - _target).sqrMagnitude > 0.1f)
+        float distanceToTarget = 0.1f;
+
+        while ((transform.position - _target.position).sqrMagnitude > distanceToTarget)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
 
             yield return null;
         }

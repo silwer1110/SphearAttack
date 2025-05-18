@@ -1,8 +1,6 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
+[RequireComponent(typeof(Renderer), typeof(Transform))]
 public class Capsul : MonoBehaviour
 {
     [SerializeField] private Mover _mover;
@@ -10,30 +8,19 @@ public class Capsul : MonoBehaviour
     private Renderer _renderer;
     private Color _baseColor = Color.yellow;
 
-    public event Action<Vector3> OnPosition;
-
-    private Transform _transform;   
+    private void Start()
+    {
+        StartMoving();
+    }
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
-        _transform = GetComponent<Transform>();
         _renderer.material.color = _baseColor;
-
-        StartCoroutine(GetCurrentPosition());
-    }
-    public void StartMoving()
-    {
-        _mover.StartMove(_transform);
     }
 
-    private IEnumerator GetCurrentPosition() 
+    private void StartMoving()
     {
-        while (enabled) 
-        {
-            OnPosition?.Invoke(_transform.position);
-
-            yield return null;
-        }
+        _mover.StartMove(transform);
     }
 }
