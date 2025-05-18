@@ -4,22 +4,17 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] Enemy _enemyPrefab;
-    [SerializeField] CapsulSpawner _capsulSpawner;
     [SerializeField] private float _spawnInterval = 1f;
+    [SerializeField] private Capsul _target;
 
-    private void OnEnable()
+    private void Start()
     {
-        _capsulSpawner.Spawned += StartSpawning;
+        StartSpawning();
     }
 
-    private void OnDisable()
+    private void StartSpawning()
     {
-        _capsulSpawner.Spawned -= StartSpawning;
-    }
-
-    private void StartSpawning(CapsulList capsuls)
-    {
-        StartCoroutine(SpawnEnemies(capsuls.GetRandomCapsul()));
+        StartCoroutine(SpawnEnemies(_target));
     }
 
     private IEnumerator SpawnEnemies(Capsul target)
@@ -30,7 +25,7 @@ public class EnemySpawner : MonoBehaviour
         {
             Enemy enemy = Instantiate(_enemyPrefab, transform.position, Quaternion.identity);
 
-            target.OnPosition += enemy.SetTarget;
+            enemy.SetTarget(target.transform);
 
             enemy.StartMoving();
 
